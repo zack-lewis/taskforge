@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/navbar";
+import Menu from "@/components/menu";
 import Sitehead from "@/components/sitehead";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -24,7 +24,7 @@ export default function RootLayout({
             <Sitehead />
           </div>
           <div className="w-100 px-4 py-2 mx-4 my-2 h-12 border border-slate-400 rounded-lg">
-            <Navbar />
+            <Menu />
           </div>
           <div className="w-100 border border-blue-800 mx-4 mb-4 px-4 py-2 rounded-xl h-1/6 flex flex-col flex-1 overflow-y-auto">
             {children} 

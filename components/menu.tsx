@@ -1,12 +1,12 @@
 import Link from 'next/link'
 import React from 'react'
 
-const Navbar = () => {
+const Menu = () => {
   return (
     <div>
-        <Link href="/">HOME</Link>
+      <button>MENU BUTTON</button>
     </div>
   )
 }
 
-export default Navbar
+export default Menu
