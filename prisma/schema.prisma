@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL") 
 }
 
 model authorization {
@@ -28,7 +28,7 @@ model note {
   id                   Int       @id @default(autoincrement())
   task                 Int
   user                 Int
-  timestamp            DateTime? @db.DateTime(0)
+  timestamp            DateTime  @db.DateTime(0)
   supercedes           Int?
   data                 String?   @db.Text
   task_note_taskTotask task      @relation("note_taskTotask", fields: [task], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "note_task_id")
@@ -43,7 +43,7 @@ model note {
 
 model project {
   id                                           Int             @id @default(autoincrement())
-  name                                         String?         @db.VarChar(45)
+  name                                         String          @db.VarChar(45)
   primary_team                                 Int?
   authorization_authorization_projectToproject authorization[] @relation("authorization_projectToproject")
   team                                         team?           @relation(fields: [primary_team], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "project_primary_team")

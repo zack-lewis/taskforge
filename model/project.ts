@@ -1,9 +1,15 @@
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
+import { db } from "@/lib/db";
 
-
-export async function getAllProjects() {
-    const allProjects = await prisma.project.findMany()
-    return(allProjects)
+export async function getProjectsList(skip = 0, qty = 10) {
+  try {
+    const projectList = await db.project.findMany({
+      skip: skip,
+      take: qty,
+    });
+    return projectList;
+  } catch (e) {
+    console.error("Error loading projects:", e);
+  } finally {
+    await db.$disconnect();
+  }
 }
-
