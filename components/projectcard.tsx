@@ -1,12 +1,19 @@
 import React from "react";
 import { project } from "@prisma/client";
+import ProjectLogo from "./projectlogo";
 
 export default function ProjectCard(p: project) {
   return (
-    <div className="h-full w-100 border border-red-800 w-48 lg:w-64 overflow-hidden justify-center">
-      <div className="text-green-400 px-2 w-full text-nowrap mt-2 text-xl flex justify-center align-middle">
-        {p.id}
-        <img src="downarrow.svg" className="w-4 h-4 my-auto" />
+    <div
+      className="h-96 border-2 border-red-800 rounded-xl w-48 lg:w-64 overflow-hidden justify-center text-green-400 text-nowrap text-xl flex flex-col align-middle bg-slate-800"
+      key={p.id}
+    >
+      <div className="w-full h-3/6">
+        <ProjectLogo name={p.name} />
+      </div>
+      <div className="w-full h-1/6 text-center text-3xl">{p.name}</div>
+      <div className="w-full h-2/6 text-xl text-gray-400 text-center">
+        {/* {p.team.name} */}
       </div>
     </div>
   );

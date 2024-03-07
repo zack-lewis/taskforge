@@ -1,12 +1,10 @@
-import Link from 'next/link'
-import React from 'react'
+import Link from "next/link";
+import React from "react";
 
-const Menu = () => {
+export default function Menu() {
   return (
     <div>
       <button>MENU BUTTON</button>
     </div>
-  )
+  );
 }
-
-export default Menu

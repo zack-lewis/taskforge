@@ -96,8 +96,8 @@ model team {
 
 model user {
   id                                     Int             @id @default(autoincrement())
-  username                               String?         @db.VarChar(45)
-  email                                  String?         @db.VarChar(45)
+  username                               String         @db.VarChar(45) @unique
+  email                                  String         @db.VarChar(45) @unique
   full_name                              String?         @db.VarChar(45)
   team_id                                Int?
   github_login                           String?         @db.VarChar(45)
