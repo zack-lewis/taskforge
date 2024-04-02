@@ -1,0 +1,109 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  // url      = env("DATABASE_URL")
+  url      = "file:./data.db"
+}
+
+
+
+model authorization {
+  id        String   @id @default(uuid())
+  teamId    String?  
+  userId    String?  
+  projectId String?  
+  roleId    String? 
+
+  // Relations 
+  project   project? @relation(fields: [projectId], references: [id])
+  role      role?    @relation(fields: [roleId], references: [id])
+  team      team?    @relation(fields: [teamId], references: [id])
+  user      user?    @relation(fields: [userId], references: [id])
+}
+
+model note {
+  id        String   @id @default(uuid()) 
+  taskId    String   
+  userId    String   
+  timestamp DateTime
+  data      String?
+
+  // Relations
+  task      task     @relation(fields: [taskId], references: [id])
+  user      user     @relation(fields: [userId], references: [id])
+}
+
+model project {
+  id             String          @id @default(uuid()) 
+  name           String
+  primary_teamId String?         
+  
+  // Relations
+  team           team?           @relation(fields: [primary_teamId], references: [id])
+  authorizations authorization[]
+  tasks          task[]
+}
+
+model role {
+  id             String          @id @default(uuid()) 
+  name           String
+  view           Boolean         @default(false)
+  edit           Boolean         @default(false)
+  assign_team    Boolean         @default(false)
+
+  // Relations
+  authorizations authorization[]
+}
+
+model task {
+  id             String    @id @default(uuid()) 
+  projectId      String?   
+  userId         String?   
+  teamId         String?   
+  nameId         String?   
+  description    String?
+  due_date       DateTime?
+  started_date   DateTime?
+  completed_date DateTime?
+
+  // Relations
+  project        project?  @relation(fields: [projectId], references: [id])
+  team           team?     @relation(fields: [teamId], references: [id])
+  user           user?     @relation(fields: [userId], references: [id])
+  notes          note[]
+}
+
+model team {
+  id             String          @id @default(uuid()) 
+  name           String?
+  leadId         String?         
+
+  // Relations
+  authorizations authorization[]
+  projects       project[]
+  tasks          task[]
+  users          user[]
+}
+
+model user {
+  id             String          @id @default(uuid()) 
+  username       String          @unique
+  email          String          @unique
+  full_name      String?
+  teamId         String?         
+  github_login   String?
+  google_login   String?
+  team_lead      Boolean
+
+  // Relations
+  team           team?           @relation(fields: [teamId], references: [id])
+  authorizations authorization[]
+  notes          note[]
+  tasks          task[]
+}
