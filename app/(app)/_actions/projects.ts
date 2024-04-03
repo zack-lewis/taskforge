@@ -66,3 +66,7 @@ export async function deleteProject(id: string) {
   revalidatePath("/");
   revalidatePath("/projects");
 }
+
+export async function getProjects() {
+  return db.project.findMany();
+}

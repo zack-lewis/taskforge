@@ -1,31 +1,19 @@
-"use client";
-
 import { project } from "@prisma/client";
 import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { addProject, updateProject } from "@/app/(app)/_actions/projects";
-import { getTeams } from "@/app/(app)/_actions/teams";
 import { Button } from "./ui/button";
-
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
+import TeamSelectBox from "./teamSelectBox";
 
 export default function ProjectForm({ project }: { project?: project | null }) {
+  "use client";
+
   const [error, action] = useFormState(
     project == null ? addProject : updateProject.bind(null, project.id),
     {}
   );
-
-  const teamList = await getTeams();
 
   return (
     <form action={action} className="space-y-8">
@@ -42,21 +30,7 @@ export default function ProjectForm({ project }: { project?: project | null }) {
       </div>
 
       <div className="space-y-2">
-        <Select>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select Team" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Team</SelectLabel>
-              {teamList.map((t) => (
-                <SelectItem key={t.id} value={t.id}>
-                  {t.name}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+        <TeamSelectBox />
         {error.primary_teamId && (
           <div className="text-destructive">{error.primary_teamId}</div>
         )}
