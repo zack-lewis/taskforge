@@ -6,6 +6,10 @@ export default function SiteNav() {
       <Link href="/">Dashboard</Link>
       <Link href="/projects">Projects</Link>
       <Link href="/tasks">Tasks</Link>
+      <hr />
+      <Link href="/admin">Admin</Link>
+      <Link href="/admin/users">Users</Link>
+      <Link href="/admin/teams">Teams</Link>
     </nav>
   );
 }

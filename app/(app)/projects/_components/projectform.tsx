@@ -1,15 +1,29 @@
-import { project } from "@prisma/client";
+"use client";
+
+import { project, team } from "@prisma/client";
 import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
+import { Label } from "../../../../components/ui/label";
+import { Input } from "../../../../components/ui/input";
 import { addProject, updateProject } from "@/app/(app)/_actions/projects";
-import { Button } from "./ui/button";
-import TeamSelectBox from "./teamSelectBox";
+import { Button } from "../../../../components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-export default function ProjectForm({ project }: { project?: project | null }) {
-  "use client";
-
+export default function ProjectForm({
+  project,
+  teamList,
+}: {
+  project?: project | null;
+  teamList: team[];
+}) {
   const [error, action] = useFormState(
     project == null ? addProject : updateProject.bind(null, project.id),
     {}
@@ -30,7 +44,21 @@ export default function ProjectForm({ project }: { project?: project | null }) {
       </div>
 
       <div className="space-y-2">
-        <TeamSelectBox />
+        <Select name="primary_teamId">
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select Team" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Team</SelectLabel>
+              {teamList.map((t) => (
+                <SelectItem key={t.id} value={t.id}>
+                  {t.name}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
         {error.primary_teamId && (
           <div className="text-destructive">{error.primary_teamId}</div>
         )}
