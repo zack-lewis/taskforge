@@ -81,7 +81,7 @@ model task {
 
 model team {
   id             String          @id @default(uuid()) 
-  name           String?
+  name           String
   leadId         String?         
 
   // Relations

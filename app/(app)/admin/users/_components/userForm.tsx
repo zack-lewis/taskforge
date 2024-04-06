@@ -43,7 +43,7 @@ export function UserForm({
   const gh_bool = user?.github_login != null ? true : false;
   const goog_bool = user?.google_login != null ? true : false;
 
-  const [teamId, setTeamId] = useState(user?.teamId);
+  const [teamId, setTeamId] = useState(user?.teamId || null);
   const [teamName, setTeamName] = useState("");
 
   useEffect(() => {

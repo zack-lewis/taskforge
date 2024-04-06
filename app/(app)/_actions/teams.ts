@@ -35,6 +35,7 @@ export async function updateTeam(
   prevState: unknown,
   formData: FormData
 ) {
+  console.log("updating");
   const result = schema.safeParse(Object.fromEntries(formData.entries()));
   if (result.success === false) {
     return result.error.formErrors.fieldErrors;
