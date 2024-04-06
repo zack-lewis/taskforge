@@ -81,28 +81,29 @@ model task {
 
 model team {
   id             String          @id @default(uuid()) 
-  name           String?
+  name           String
   leadId         String?         
 
   // Relations
+  teamLead       user?           @relation(name: "teamLead",fields: [leadId], references: [id])
   authorizations authorization[]
   projects       project[]
   tasks          task[]
-  users          user[]
+  users          user[]          @relation(name: "team")
 }
 
 model user {
   id             String          @id @default(uuid()) 
   username       String          @unique
   email          String          @unique
-  full_name      String?
+  full_name      String
   teamId         String?         
   github_login   String?
   google_login   String?
-  team_lead      Boolean
 
   // Relations
-  team           team?           @relation(fields: [teamId], references: [id])
+  teamLead       team[]          @relation(name: "teamLead")
+  team           team?           @relation(name: "team", fields: [teamId], references: [id])
   authorizations authorization[]
   notes          note[]
   tasks          task[]

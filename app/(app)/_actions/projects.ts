@@ -1,4 +1,5 @@
 import db from "@/lib/database";
+import { project } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 import { z } from "zod";
@@ -9,6 +10,7 @@ const schema = z.object({
 });
 
 export async function addProject(prevState: unknown, formData: FormData) {
+  console.log(formData);
   const result = schema.safeParse(Object.fromEntries(formData.entries()));
   if (result.success === false) {
     return result.error.formErrors.fieldErrors;
@@ -65,4 +67,8 @@ export async function deleteProject(id: string) {
 
   revalidatePath("/");
   revalidatePath("/projects");
+}
+
+export async function getProjects() {
+  return db.project.findMany();
 }

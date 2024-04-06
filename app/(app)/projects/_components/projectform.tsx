@@ -1,14 +1,12 @@
 "use client";
 
-import { project } from "@prisma/client";
+import { project, team } from "@prisma/client";
 import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
+import { Label } from "../../../../components/ui/label";
+import { Input } from "../../../../components/ui/input";
 import { addProject, updateProject } from "@/app/(app)/_actions/projects";
-import { getTeams } from "@/app/(app)/_actions/teams";
-import { Button } from "./ui/button";
-
+import { Button } from "../../../../components/ui/button";
 import {
   Select,
   SelectContent,
@@ -17,15 +15,19 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
+} from "@/components/ui/select";
 
-export default function ProjectForm({ project }: { project?: project | null }) {
+export default function ProjectForm({
+  project,
+  teamList,
+}: {
+  project?: project | null;
+  teamList: team[];
+}) {
   const [error, action] = useFormState(
     project == null ? addProject : updateProject.bind(null, project.id),
     {}
   );
-
-  const teamList = await getTeams();
 
   return (
     <form action={action} className="space-y-8">
@@ -42,7 +44,7 @@ export default function ProjectForm({ project }: { project?: project | null }) {
       </div>
 
       <div className="space-y-2">
-        <Select>
+        <Select name="primary_teamId">
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select Team" />
           </SelectTrigger>
