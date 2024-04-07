@@ -5,7 +5,6 @@ import { getTeams } from "../../_actions/teams";
 import { getUsers } from "../../_actions/users";
 
 export default async function TeamsPage() {
-  const teamList = await getTeams();
-  const userList = await getUsers();
+  const [teamList, userList] = await Promise.all([getTeams(), getUsers()]);
   return <>{<TeamsTable teams={teamList} users={userList} />}</>;
 }

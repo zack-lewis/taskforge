@@ -18,6 +18,7 @@ const schema = z.object({
 export async function addUser(prevState: unknown, formData: FormData) {
   const result = schema.safeParse(Object.fromEntries(formData.entries()));
   if (result.success === false) {
+    console.log(result);
     return result.error.formErrors.fieldErrors;
   }
 
@@ -28,7 +29,7 @@ export async function addUser(prevState: unknown, formData: FormData) {
       full_name: data.full_name,
       username: data.username,
       email: data.email,
-      teamId: data.teamId,
+      teamId: data.teamId || null,
       github_login: null,
       google_login: null,
     },

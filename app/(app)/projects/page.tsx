@@ -8,5 +8,5 @@ import { getTeams } from "../_actions/teams";
 export default async function ProjectsPage() {
   const projectList = await getProjects();
   const teamList = await getTeams();
-  return <>{<ProjectsTable list={projectList} teams={teamList} />}</>;
+  return <>{<ProjectsTable projectList={projectList} teamList={teamList} />}</>;
 }

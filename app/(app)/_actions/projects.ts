@@ -1,3 +1,5 @@
+"use server";
+
 import db from "@/lib/database";
 import { project } from "@prisma/client";
 import { revalidatePath } from "next/cache";
@@ -6,7 +8,7 @@ import { z } from "zod";
 
 const schema = z.object({
   name: z.string().min(1),
-  primary_teamId: z.string().min(1),
+  primary_teamId: z.string().min(1, "Must select a team"),
 });
 
 export async function addProject(prevState: unknown, formData: FormData) {

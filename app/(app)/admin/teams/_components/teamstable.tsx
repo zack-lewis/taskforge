@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { ChangeEvent, ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { team, user } from "@prisma/client";
 import { useFormState, useFormStatus } from "react-dom";
 import { addTeam, deleteTeam, updateTeam } from "@/app/(app)/_actions/teams";
@@ -62,7 +62,16 @@ export default function TeamsTable(params: any) {
   const tableVis = teamList.length > 0 ? "block" : "hidden";
   const noTeams = teamList.length == 0 ? "block" : "hidden";
 
-  function handleNewBtnClick() {}
+  const [error, action] = useFormState(addTeam, {});
+  const [leadName, setLeadName] = useState("");
+  const [leadId, setLeadId] = useState("");
+
+  useEffect(() => {
+    if (leadId) {
+      const username = userList.find((item) => item.id === leadId)?.full_name;
+      if (username) setLeadName(username);
+    }
+  }, [leadId, userList]);
 
   function getUserName(userId: string | null) {
     if (userId == null) return "--No Lead--";
@@ -70,25 +79,62 @@ export default function TeamsTable(params: any) {
     const i = userList.findIndex((u) => u.id == userId);
     return userList[i].full_name;
   }
-  //   const [error, action] = useFormState(
-  //     team == null ? addTeam : updateTeam.bind(null, team.id),
-  //     {}
-  //   );
-
-  //   const [leadId, setLeadId] = useState(team?.leadId);
-  //   const [leadName, setLeadName] = useState("");
-
-  //   useEffect(() => {
-  //     if (leadId) {
-  //       const leadName = userList.find((item) => item.id === leadId);
-  //       console.log(leadName);
-  //     }
-  //   }, [leadId, userList]);
 
   return (
     <>
       <div className={`w-full h-10`}>
-        <Button onClick={handleNewBtnClick}>New</Button>
+        {/* <TeamForm userList={userList} team={null} open={showNew} />; */}
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button>New</Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Create Team</DialogTitle>
+              <DialogDescription>
+                Make changes to the team here.
+              </DialogDescription>
+            </DialogHeader>
+            <form action={action} className="space-y-8">
+              <div className="space-y-2">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  defaultValue={""}
+                />
+                {error?.name && (
+                  <div className="text-destructive">Name is required</div>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="teamLead">Team Lead</Label>
+                <Select
+                  name="leadId"
+                  onValueChange={(newVal) => {
+                    setLeadId(newVal);
+                  }}
+                >
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select Team Lead" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {userList.map((t) => (
+                        <SelectItem key={t.id} value={t.id}>
+                          {t.full_name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+              <SubmitButton />
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
       <div className={`w-full ${noTeams}`}>
         <h2>No teams found! Create a new one</h2>
@@ -119,74 +165,11 @@ export default function TeamsTable(params: any) {
                       <DropdownMenuLabel className="text-center">
                         Actions
                       </DropdownMenuLabel>
-                      <Dialog>
-                        <DialogTrigger>Edit</DialogTrigger>
-                        <DialogContent className="sm:max-w-[425px]">
-                          <DialogHeader>
-                            <DialogTitle>Edit Team</DialogTitle>
-                            <DialogDescription>
-                              Make changes to the team here.
-                            </DialogDescription>
-                          </DialogHeader>
-                          {/* <form
-                            action={() => updateTeam.bind(null, t.id)}
-                            className="space-y-8"
-                          >
-                            <div className="grid gap-4 py-4">
-                              <div className="grid grid-cols-4 items-center gap-4">
-                                <div className="space-y-2">
-                                  <Label htmlFor="name">Name</Label>
-                                  <Input
-                                    type="text"
-                                    id="name"
-                                    name="name"
-                                    required
-                                    defaultValue={t?.name}
-                                    onChange={(e) => {
-                                      if (e.target.value.length == 0)
-                                        setInvalidName(true);
-                                      else setChanged(true);
-                                    }}
-                                  />
-                                  {invalidName && (
-                                    <div className="text-destructive">
-                                      required
-                                    </div>
-                                  )}
-                                </div>
-                                <div className="space-y-2">
-                                  <Label htmlFor="teamLead">Team Lead</Label>
-                                  <Select
-                                    name="leadId"
-                                    onValueChange={() => setChanged(true)}
-                                  >
-                                    <SelectTrigger className="w-[180px]">
-                                      <SelectValue placeholder="Select Team Lead" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      <SelectGroup>
-                                        {userList.map((u) => (
-                                          <SelectItem key={u.id} value={u.id}>
-                                            {u.full_name}
-                                          </SelectItem>
-                                        ))}
-                                      </SelectGroup>
-                                    </SelectContent>
-                                  </Select>
-                                </div>
-                              </div>
-                            </div>
-                            <DialogFooter>
-                              <Button type="submit" disabled={pending}>
-                                {pending ? "Saving..." : "Save"}
-                              </Button>
-                            </DialogFooter>
-                          </form> */}
-                          <TeamForm userList={userList} team={t} />
-                        </DialogContent>
-                      </Dialog>
+                      <TeamForm userList={userList} team={t} />
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem>Delete</DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <DeleteTeam team={t} />
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
@@ -214,53 +197,96 @@ function TeamForm({
   const [leadId, setLeadId] = useState(team?.leadId);
   const [leadName, setLeadName] = useState("");
   const [changed, setChanged] = useState(false);
-  const [invalidName, setInvalidName] = useState(false);
 
   useEffect(() => {
     if (leadId) {
-      const leadName = userList.find((item) => item.id === leadId);
-      console.log(leadName);
+      const username = userList.find((item) => item.id === leadId)?.full_name;
+      if (username) setLeadName(username);
     }
   }, [leadId, userList]);
 
-  return (
-    <form action={action} className="space-y-8">
-      <div className="space-y-2">
-        <Label htmlFor="name">Name</Label>
-        <Input
-          type="text"
-          id="name"
-          name="name"
-          required
-          defaultValue={team?.name || ""}
-          onChange={(e) => {
-            if (e.target.value.length == 0) setInvalidName(true);
-            else setChanged(true);
-          }}
-        />
-        {invalidName && <div className="text-destructive">required</div>}
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="teamLead">Team Lead</Label>
-        <Select name="leadId" onValueChange={() => setChanged(true)}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select Team Lead" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              {userList.map((t) => (
-                <SelectItem key={t.id} value={t.id}>
-                  {t.full_name}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        {/* {error.leadId && <div className="text-destructive">{error.leadId}</div>} */}
-      </div>
+  console.log("Dialog here");
 
-      <SubmitButton />
-    </form>
+  return (
+    <Dialog>
+      <DialogTrigger>Edit</DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Edit Team</DialogTitle>
+          <DialogDescription>Make changes to the team here.</DialogDescription>
+        </DialogHeader>
+        <form action={action} className="space-y-8">
+          <div className="space-y-2">
+            <Label htmlFor="name">Name</Label>
+            <Input
+              type="text"
+              id="name"
+              name="name"
+              required
+              defaultValue={team?.name || ""}
+              onChange={(e) => {
+                setChanged(true);
+              }}
+            />
+            {error?.name && <div className="text-destructive">required</div>}
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="teamLead">Team Lead</Label>
+            <Select
+              name="leadId"
+              onValueChange={(newVal) => {
+                setChanged(true);
+                setLeadId(newVal);
+              }}
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select Team Lead" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {userList.map((t) => (
+                    <SelectItem key={t.id} value={t.id}>
+                      {t.full_name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          <SubmitButton />
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function DeleteTeam({ team }: { team: team }) {
+  const [confirm, setConfirm] = useState(false);
+  return (
+    <Dialog>
+      <DialogTrigger>Delete</DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Delete Team</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-2">
+          <Label htmlFor="full_name">
+            Confirm deletion of team {team.name} by typing DELETE below
+          </Label>
+          <Input
+            type="text"
+            id="full_name"
+            name="full_name"
+            onChange={(e) =>
+              e.target.value == "DELETE" ? setConfirm(true) : setConfirm(false)
+            }
+          />
+        </div>
+        <Button onClick={() => deleteTeam(team.id)} disabled={!confirm}>
+          Delete
+        </Button>
+      </DialogContent>
+    </Dialog>
   );
 }
 
