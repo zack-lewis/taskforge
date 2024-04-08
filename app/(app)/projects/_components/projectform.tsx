@@ -28,6 +28,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { SubmitButton } from "@/components/submitbutton";
 
 export function NewProjectForm({ teamList }: { teamList: team[] }) {
   const [error, action] = useFormState(addProject, {});
@@ -165,15 +166,5 @@ export function DeleteProject({ project }: { project: project }) {
         </Button>
       </DialogContent>
     </Dialog>
-  );
-}
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-
-  return (
-    <Button type="submit" disabled={pending}>
-      {pending ? "Saving..." : "Save"}
-    </Button>
   );
 }
