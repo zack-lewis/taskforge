@@ -1,4 +1,5 @@
 import SiteNav from "@/components/sitenav";
+import TitleBar from "@/components/titlebar";
 
 export default function PageLayout({
   children,
@@ -10,7 +11,11 @@ export default function PageLayout({
       <div className="hidden md:block md:w-1/6">
         <SiteNav />
       </div>
-      <div className="w-full md:w-5/6"> {children}</div>
+      <div className="w-full md:w-5/6 m-2">
+        <TitleBar />
+        <hr className="my-2" />
+        {children}
+      </div>
     </div>
   );
 }

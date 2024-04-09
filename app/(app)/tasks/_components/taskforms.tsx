@@ -65,7 +65,7 @@ export function NewTask() {
                 id="due_date"
                 name="due_date"
                 // className="hidden"
-                value={dueDate?.toDateString()}
+                value={dueDate?.toLocaleDateString()}
                 required
               />
 

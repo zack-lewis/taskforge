@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { UserNav } from "./user-nav";
+import { NavBar } from "./navbar";
 import { usePathname } from "next/navigation";
 import SiteNav from "./sitenav";
 import { useEffect, useState } from "react";
@@ -80,7 +80,7 @@ export default function TitleBar() {
           {displayName}
         </div>
         <div className="w-1/5">
-          <UserNav />
+          <NavBar />
         </div>
       </div>
       <div

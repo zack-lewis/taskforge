@@ -5,6 +5,7 @@ import { ChangeEvent } from "react";
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 import { z } from "zod";
+import { user } from "@prisma/client";
 
 const schema = z.object({
   full_name: z.string().min(1),
@@ -104,4 +105,9 @@ export async function handleUserLookup(event: ChangeEvent<HTMLInputElement>) {
 
 export async function getUsers() {
   return db.user.findMany();
+}
+
+export async function getUserData(userId: string): Promise<user> {
+  const user = await db.user.findFirstOrThrow({ where: { id: userId } });
+  return user;
 }

@@ -66,11 +66,11 @@ model task {
   projectId      String?   
   userId         String?   
   teamId         String?   
-  name         String?   
+  name           String?   
   description    String?
-  due_date       DateTime?
-  started_date   DateTime?
-  completed_date DateTime?
+  due_date       String?
+  started_date   String?
+  completed_date String?
 
   // Relations
   project        project?  @relation(fields: [projectId], references: [id])
@@ -107,4 +107,14 @@ model user {
   authorizations authorization[]
   notes          note[]
   tasks          task[]
+  sessions       session[]
+}
+
+model session {
+  id            String            @id @default(uuid())
+  userId        String            
+  expiration    String            
+
+  // Relations
+  user          user              @relation(fields: [userId], references: [id])
 }

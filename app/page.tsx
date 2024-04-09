@@ -11,9 +11,6 @@ export default async function Home() {
     const today = new Intl.DateTimeFormat("en-US").format(
       now + DueInDays * dayInMS
     );
-    // const tasks = await db.task.count({
-    //   where: {},
-    // });
     return <></>;
   }
 

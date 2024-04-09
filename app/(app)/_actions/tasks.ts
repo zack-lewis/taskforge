@@ -8,17 +8,16 @@ import { z } from "zod";
 
 const schema = z.object({
   name: z.string().min(1),
-  projectId: z.string(),
-  userId: z.string(),
-  teamId: z.string(),
-  description: z.string(),
-  due_date: z.date(),
-  started_date: z.string().min(1),
-  completed_date: z.string().min(1),
+  projectId: z.string().optional(),
+  userId: z.string().optional(),
+  teamId: z.string().optional(),
+  description: z.string().optional(),
+  due_date: z.string().optional(),
+  started_date: z.string().optional(),
+  completed_date: z.string().optional(),
 });
 
 export async function addTask(prevState: unknown, formData: FormData) {
-  console.log(formData);
   const result = schema.safeParse(Object.fromEntries(formData.entries()));
   if (result.success === false) {
     return result.error.formErrors.fieldErrors;
@@ -91,4 +90,8 @@ export async function deleteTask(id: string) {
 
 export async function getTasks() {
   return db.task.findMany();
+}
+
+export async function startTask(user: string) {
+  const now = Date.now();
 }
