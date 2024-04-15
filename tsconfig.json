@@ -28,7 +28,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "middleware.js",
-    "config.js"
+    "config.js",
+    "config.example.js"
   ],
   "exclude": ["node_modules"]
 }
