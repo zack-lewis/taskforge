@@ -11,8 +11,6 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -22,7 +20,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -33,8 +30,7 @@ import { Input } from "@/components/ui/input";
 import { useFormState, useFormStatus } from "react-dom";
 import { useEffect, useState } from "react";
 import { MoreHorizontal } from "lucide-react";
-import { addUser, deleteUser, updateUser } from "@/app/(app)/_actions/users";
-import { Checkbox } from "@/components/ui/checkbox";
+import { addUser, deleteUser, updateUser } from "@/app/_actions/users";
 import {
   DropdownMenu,
   DropdownMenuContent,

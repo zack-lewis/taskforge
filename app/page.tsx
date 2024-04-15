@@ -23,20 +23,20 @@ export default async function Home() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row">
-      <Card className="h-1/4">
+    <div className="flex flex-col md:flex-row justify-center">
+      <Card className="h-1/4 w-1/6">
         <CardHeader>
           <CardTitle className="flex justify-center">Due Today</CardTitle>
         </CardHeader>
         <CardContent>{getTasksDue(0)}</CardContent>
       </Card>
-      <Card className="h-1/4">
+      <Card className="h-1/4 w-1/6">
         <CardHeader>
           <CardTitle className="flex justify-center">Overdue</CardTitle>
         </CardHeader>
         <CardContent>{getOverdueTasks()}</CardContent>
       </Card>
-      <Card className="h-1/4">
+      <Card className="h-1/4 w-1/6">
         <CardHeader>
           <CardTitle className="flex justify-center">All Tasks</CardTitle>
         </CardHeader>

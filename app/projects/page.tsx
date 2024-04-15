@@ -1,9 +1,9 @@
 "use server";
 
-import { ProjectsTable } from "@/app/(app)/projects/_components/projectList";
-import { getProjects } from "../_actions/projects";
+import { ProjectsTable } from "@/app/projects/_components/projectList";
+import { getProjects } from "@/app/_actions/projects";
 import { project } from "@prisma/client";
-import { getTeams } from "../_actions/teams";
+import { getTeams } from "@/app/_actions/teams";
 
 export default async function ProjectsPage() {
   const projectList = await getProjects();

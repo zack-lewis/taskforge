@@ -24,6 +24,11 @@ export default function TitleBar() {
       break;
     case "/projects":
       displayName = "Projects";
+      break;
+    case "/tasks":
+      displayName = "Tasks";
+      break;
+
     default:
       break;
   }
@@ -40,7 +45,7 @@ export default function TitleBar() {
 
   return (
     <>
-      <div className="flex flex-row relative">
+      <div className="flex flex-row relative w-full">
         <div
           className="w-1/5 flex md:hidden justify-center align-middle"
           onClick={toggleSiteNav}
@@ -71,12 +76,12 @@ export default function TitleBar() {
           <Image
             src="/taskforge.svg"
             alt="TaskForge Logo"
-            width={200}
+            width={300}
             height={100}
             className="align-middle mx-auto"
           />
         </div>
-        <div className="flex w-3/5 justify-center text-xl my-auto">
+        <div className="flex w-3/5 justify-center h-full text-xl md:text-4xl lg:text-7xl my-auto">
           {displayName}
         </div>
         <div className="w-1/5">

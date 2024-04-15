@@ -1,8 +1,7 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { useContext, useEffect, useState } from "react";
-import { UserContext } from "@/lib/contexts";
+import { useEffect, useState } from "react";
 
 import {
   DropdownMenu,
@@ -15,13 +14,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { AvatarMenuLabel, AvatarMenuLogout, NavAvatar } from "./user-nav";
+import { NavAvatar } from "./user-nav";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { Button } from "./ui/button";
 
 export function NavBar() {
   const { setTheme } = useTheme();
   const [theme, setLTheme] = useState("system");
-  const [userContext, setUserContext] = useContext(UserContext);
+  const { data: session } = useSession();
 
   useEffect(() => {
     setTheme(theme);
@@ -30,12 +31,19 @@ export function NavBar() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <NavAvatar userId={userContext} />
+        <NavAvatar />
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
-          <AvatarMenuLabel userId={userContext} />
+          <div className="flex flex-col space-y-1">
+            <p className="text-sm font-medium leading-none">
+              {session?.user?.name}
+            </p>
+            <p className="text-xs leading-none text-muted-foreground">
+              {session?.user?.email}
+            </p>
+          </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
@@ -50,8 +58,10 @@ export function NavBar() {
           </DropdownMenuRadioGroup>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <AvatarMenuLogout userId={userContext} />
+        <DropdownMenuItem asChild>
+          <Button asChild>
+            <Link href="/api/auth/signout">Log Out</Link>
+          </Button>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

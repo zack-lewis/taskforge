@@ -1,8 +1,8 @@
 "use server";
 
-import TeamsTable from "@/app/(app)/admin/teams/_components/teamstable";
-import { getTeams } from "../../_actions/teams";
-import { getUsers } from "../../_actions/users";
+import TeamsTable from "./_components/teamstable";
+import { getTeams } from "@/app/_actions/teams";
+import { getUsers } from "@/app/_actions/users";
 
 export default async function TeamsPage() {
   const [teamList, userList] = await Promise.all([getTeams(), getUsers()]);

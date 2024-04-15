@@ -1,7 +1,7 @@
 "use server";
 
-import { getUsers } from "../../_actions/users";
-import { getTeams } from "../../_actions/teams";
+import { getUsers } from "@/app/_actions/users";
+import { getTeams } from "@/app/_actions/teams";
 
 import { UserTable } from "./_components/userForm";
 

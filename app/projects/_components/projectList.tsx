@@ -21,7 +21,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
-import { useFormStatus } from "react-dom";
 
 export function ProjectsTable({
   projectList,

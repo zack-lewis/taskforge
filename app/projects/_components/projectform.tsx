@@ -9,7 +9,7 @@ import {
   addProject,
   deleteProject,
   updateProject,
-} from "@/app/(app)/_actions/projects";
+} from "@/app/_actions/projects";
 import { Button } from "@/components/ui/button";
 import {
   Select,
