@@ -75,7 +75,7 @@ export default function TaskList({
   return (
     <div className="w-full flex flex-col">
       <div className="w-full py-2">
-        <NewTask />
+        <NewTask projectList={projectList} />
       </div>
       <div className={tableVis ? "hidden" : "block"}>NO TASKS FOUND</div>
       <div className={`w-full ${tableVis ? "block" : "hidden"}`}>

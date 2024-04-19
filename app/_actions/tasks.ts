@@ -153,3 +153,15 @@ export async function assignProject(taskId: string, projectId: string) {
 export async function getTask(id: string) {
   return await db.task.findFirstOrThrow({ where: { id: id } });
 }
+
+export async function getTasksDueInRange(startDate: string, endDate: string) {
+  return await db.task.findMany({
+    where: { due_date: { gte: startDate, lte: endDate } },
+  });
+}
+
+export async function countTasksDueInRange(startDate: string, endDate: string) {
+  return await db.task.count({
+    where: { due_date: { gte: startDate, lte: endDate }, completed_date: null },
+  });
+}

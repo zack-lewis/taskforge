@@ -34,7 +34,7 @@ import {
 import { useUserContext } from "@/components/contextsprovider";
 import { createNote } from "@/app/_actions/notes";
 
-export function NewTask() {
+export function NewTask({ projectList }: { projectList: project[] }) {
   const [error, action] = useFormState(addTask, {});
   const [dueDate, setDueDate] = useState<Date>();
 
@@ -74,7 +74,7 @@ export function NewTask() {
                 type="text"
                 id="due_date"
                 name="due_date"
-                // className="hidden"
+                className="hidden"
                 value={dueDate?.toLocaleDateString()}
                 required
               />
@@ -83,9 +83,26 @@ export function NewTask() {
                 <div className="text-destructive">required</div>
               )}
             </div>
-            {/* 
-      userId: data.userId;
-      teamId: data.teamId; */}
+            <div className="space-y-2">
+              <Label htmlFor="project">Project</Label>
+              <Select name="projectId">
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select Project" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {projectList.map((p: project) => (
+                      <SelectItem key={p.id} value={p.id}>
+                        {p.name}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {error?.projectId && (
+                <div className="text-destructive">required</div>
+              )}
+            </div>
             <SubmitButton />
           </form>
         </DialogContent>

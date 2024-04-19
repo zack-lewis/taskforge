@@ -1,24 +1,19 @@
 "use server";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { countTasksDueInRange } from "./_actions/tasks";
 
 export default async function Home() {
-  async function getTasksDue(DueInDays: number) {
-    const now = Date.now();
-    const dayInMS = 1000 * 60 * 60 * 24;
-    const today = new Intl.DateTimeFormat("en-US").format(
-      now + DueInDays * dayInMS
-    );
-    return <></>;
-  }
+  const today = new Date().toLocaleDateString();
+  const yesterday = new Date(
+    new Date().setDate(new Date().getDate() - 1)
+  ).toLocaleDateString();
+  const zeroDay = new Date(0).toLocaleDateString();
+  const future = new Date(3000, 1, 1).toLocaleDateString();
 
-  function getOverdueTasks() {
-    return <></>;
-  }
-
-  function getIncompleteTasks() {
-    return <></>;
-  }
+  const dueToday = await countTasksDueInRange(today, today);
+  const overDue = await countTasksDueInRange(zeroDay, yesterday);
+  const incomplete = await countTasksDueInRange(today, future);
 
   return (
     <div className="flex flex-col md:flex-row justify-center">
@@ -26,19 +21,23 @@ export default async function Home() {
         <CardHeader>
           <CardTitle className="flex justify-center">Due Today</CardTitle>
         </CardHeader>
-        <CardContent>{getTasksDue(0)}</CardContent>
+        <CardContent className="text-center text-6xl text-green-500">
+          {dueToday}
+        </CardContent>
       </Card>
       <Card className="h-1/4 w-1/6">
         <CardHeader>
           <CardTitle className="flex justify-center">Overdue</CardTitle>
         </CardHeader>
-        <CardContent>{getOverdueTasks()}</CardContent>
+        <CardContent className="text-center text-6xl text-red-500">
+          {overDue}
+        </CardContent>
       </Card>
       <Card className="h-1/4 w-1/6">
         <CardHeader>
           <CardTitle className="flex justify-center">All Tasks</CardTitle>
         </CardHeader>
-        <CardContent>{getIncompleteTasks()}</CardContent>
+        <CardContent className="text-center text-6xl">{incomplete}</CardContent>
       </Card>
     </div>
   );
