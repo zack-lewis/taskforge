@@ -35,7 +35,6 @@ export async function updateTeam(
   prevState: unknown,
   formData: FormData
 ) {
-  console.log("updating");
   const result = schema.safeParse(Object.fromEntries(formData.entries()));
   if (result.success === false) {
     return result.error.formErrors.fieldErrors;
@@ -69,4 +68,13 @@ export async function deleteTeam(id: string) {
 
 export async function getTeams() {
   return db.team.findMany();
+}
+
+export async function getTeamName(id: string) {
+  if (id == null) return;
+  const team = await db.team.findFirstOrThrow({
+    where: { id: id },
+    select: { id: false, name: true },
+  });
+  return team.name;
 }

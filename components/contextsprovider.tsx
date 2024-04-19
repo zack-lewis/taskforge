@@ -1,21 +1,33 @@
 "use client";
 
-import { UserContext } from "@/lib/contexts";
-import { SessionProvider } from "next-auth/react";
-import { useState } from "react";
+import { user } from "@prisma/client";
+import { createContext, useContext, useState } from "react";
+
+const UserContext = createContext<any>(null);
 
 export default function ContextProvider({
   children,
+  userData,
 }: Readonly<{
   children: React.ReactNode;
+  userData: user;
 }>) {
-  const [userContext, setUserContext] = useState("default context value");
+  const [userContext, setUserContext] = useState(userData.id);
 
   return (
-    <SessionProvider basePath="/login/auth">
-      <UserContext.Provider value={userContext}>
-        {children}
-      </UserContext.Provider>
-    </SessionProvider>
+    <UserContext.Provider value={{ userContext, setUserContext }}>
+      {children}
+    </UserContext.Provider>
   );
+}
+
+export function useUserContext() {
+  const context = useContext(UserContext);
+  if (!context) {
+    throw new Error(
+      "useUserContext must be used within the UserContext provider"
+    );
+  }
+
+  return context;
 }

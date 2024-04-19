@@ -1,13 +1,14 @@
 import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
+// import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
 import { NextAuthOptions } from "next-auth";
 import {
   GITHUB_ID,
   GITHUB_SECRET,
-  GOOGLE_CLIENT_ID,
-  GOOGLE_SECRET,
+  // GOOGLE_CLIENT_ID,
+  // GOOGLE_SECRET,
 } from "@/config";
+import { getUserByEmail } from "@/app/_actions/users";
 
 const authOptions: NextAuthOptions = {
   // Secret for Next-auth, without this JWT encryption/decryption won't work
@@ -21,10 +22,10 @@ const authOptions: NextAuthOptions = {
       clientId: GITHUB_ID,
       clientSecret: GITHUB_SECRET,
     }),
-    GoogleProvider({
-      clientId: GOOGLE_CLIENT_ID,
-      clientSecret: GOOGLE_SECRET,
-    }),
+    // GoogleProvider({
+    //   clientId: GOOGLE_CLIENT_ID,
+    //   clientSecret: GOOGLE_SECRET,
+    // }),
   ],
 };
 

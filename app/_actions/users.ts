@@ -19,7 +19,6 @@ const schema = z.object({
 export async function addUser(prevState: unknown, formData: FormData) {
   const result = schema.safeParse(Object.fromEntries(formData.entries()));
   if (result.success === false) {
-    console.log(result);
     return result.error.formErrors.fieldErrors;
   }
 
@@ -31,6 +30,23 @@ export async function addUser(prevState: unknown, formData: FormData) {
       username: data.username,
       email: data.email,
       teamId: data.teamId || null,
+      github_login: null,
+      google_login: null,
+    },
+  });
+
+  revalidatePath("/admin/users");
+
+  redirect("/admin/users");
+}
+
+export async function newUser(email: string, username: string) {
+  await db.user.create({
+    data: {
+      full_name: username,
+      username: username,
+      email: email,
+      teamId: null,
       github_login: null,
       google_login: null,
     },
@@ -82,14 +98,14 @@ export async function deleteUser(id: string) {
   revalidatePath("/admin/users");
 }
 
-export async function lookupUser(searchInput: string) {
+export async function searchUser(searchInput: string) {
   return db.user.findMany({
     where: { username: { contains: searchInput } },
     take: 5,
   });
 }
 
-export async function getUserById(id: string) {
+export async function getUsernameById(id: string) {
   const user = await db.user.findFirstOrThrow({
     where: { id: id },
     select: { id: false, full_name: true },
@@ -100,14 +116,42 @@ export async function getUserById(id: string) {
 
 export async function handleUserLookup(event: ChangeEvent<HTMLInputElement>) {
   const value = event.target.value;
-  const userList = await lookupUser(value);
+  const userList = await searchUser(value);
 }
 
 export async function getUsers() {
-  return db.user.findMany();
+  return await db.user.findMany();
+}
+
+export async function getUsersJson() {
+  const data = await db.user.findMany();
+  return JSON.stringify(data);
 }
 
 export async function getUserData(userId: string): Promise<user> {
   const user = await db.user.findFirstOrThrow({ where: { id: userId } });
   return user;
+}
+
+export async function getUserByEmail(email: string | null | undefined) {
+  if (email == null || email == undefined) {
+    throw new Error("Null User");
+  }
+
+  try {
+    const user = await db.user.findFirstOrThrow({ where: { email: email } });
+    return user;
+  } catch (e) {
+    throw new Error("User not found");
+  }
+}
+
+export async function lookupAddUser(email: string, name: string) {
+  try {
+    const user = await getUserByEmail(email);
+    return user;
+  } catch (e) {
+    const newU = await newUser(email, name);
+    return lookupAddUser(email, name);
+  }
 }

@@ -1,8 +1,6 @@
 "use server";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-// import db from "@/lib/database";
-// import Image from "next/image";
 
 export default async function Home() {
   async function getTasksDue(DueInDays: number) {

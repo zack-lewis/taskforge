@@ -44,23 +44,19 @@ export async function addTask(prevState: unknown, formData: FormData) {
   redirect("/tasks");
 }
 
-export async function updateTask(
-  id: string,
-  prevState: unknown,
-  formData: FormData
-) {
+export async function updateTask(prevState: unknown, formData: FormData) {
   const result = schema.safeParse(Object.fromEntries(formData.entries()));
   if (result.success === false) {
     return result.error.formErrors.fieldErrors;
   }
 
   const data = result.data;
-  const task = await db.task.findUnique({ where: { id } });
+  const task = await db.task.findUnique({ where: { id: data.projectId } });
 
   if (task == null) return notFound();
 
   await db.task.update({
-    where: { id },
+    where: { id: data.projectId },
     data: {
       projectId: data.projectId,
       userId: data.userId,
@@ -72,8 +68,8 @@ export async function updateTask(
       completed_date: data.completed_date,
     },
   });
-
   revalidatePath("/");
+
   revalidatePath("/tasks");
 
   redirect("/tasks");
@@ -89,9 +85,71 @@ export async function deleteTask(id: string) {
 }
 
 export async function getTasks() {
-  return db.task.findMany();
+  return db.task.findMany({ where: { completed_date: null } });
 }
 
-export async function startTask(user: string) {
-  const now = Date.now();
+export async function startTask(user: string, taskId: string) {
+  const now = new Date().toLocaleDateString();
+  try {
+    const startedTask = await db.task.update({
+      where: {
+        id: taskId,
+      },
+      data: {
+        userId: user,
+        started_date: now,
+      },
+    });
+  } catch (e) {
+    console.log("Start task error: ", e);
+  }
+
+  revalidatePath("/tasks");
+
+  redirect("/tasks");
+}
+
+export async function completeTask(taskId: string) {
+  try {
+    const task = await db.task.update({
+      where: { id: taskId },
+      data: { completed_date: new Date().toLocaleDateString() },
+    });
+  } catch (e) {
+    console.log("Unable to complete task: ", e);
+  }
+
+  revalidatePath("/tasks");
+
+  redirect("/tasks");
+}
+
+export async function assignOwner(taskId: string, ownerId: string) {
+  await db.task.update({
+    where: { id: taskId },
+    data: {
+      userId: ownerId,
+    },
+  });
+
+  revalidatePath("/tasks");
+
+  redirect("/tasks");
+}
+
+export async function assignProject(taskId: string, projectId: string) {
+  await db.task.update({
+    where: { id: taskId },
+    data: {
+      projectId: projectId,
+    },
+  });
+
+  revalidatePath("/tasks");
+
+  redirect("/tasks");
+}
+
+export async function getTask(id: string) {
+  return await db.task.findFirstOrThrow({ where: { id: id } });
 }

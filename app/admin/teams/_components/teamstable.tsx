@@ -151,7 +151,9 @@ export default function TeamsTable(params: any) {
                       <DropdownMenuLabel className="text-center">
                         Actions
                       </DropdownMenuLabel>
-                      <TeamForm userList={userList} team={t} />
+                      <DropdownMenuItem asChild>
+                        <TeamForm userList={userList} team={t} />
+                      </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem asChild>
                         <DeleteTeam team={t} />
@@ -190,8 +192,6 @@ function TeamForm({
       if (username) setLeadName(username);
     }
   }, [leadId, userList]);
-
-  console.log("Dialog here");
 
   return (
     <Dialog>
@@ -278,7 +278,6 @@ function DeleteTeam({ team }: { team: team }) {
 
 function SubmitButton() {
   const { pending } = useFormStatus();
-  console.log("Submitting Form");
 
   return (
     <Button type="submit" disabled={pending}>

@@ -31,8 +31,9 @@ model note {
   id        String   @id @default(uuid()) 
   taskId    String   
   userId    String   
-  timestamp DateTime
-  data      String?
+  timestamp String
+  data      String
+  date      String
 
   // Relations
   task      task     @relation(fields: [taskId], references: [id])
@@ -107,14 +108,4 @@ model user {
   authorizations authorization[]
   notes          note[]
   tasks          task[]
-  sessions       session[]
-}
-
-model session {
-  id            String            @id @default(uuid())
-  userId        String            
-  expiration    String            
-
-  // Relations
-  user          user              @relation(fields: [userId], references: [id])
 }

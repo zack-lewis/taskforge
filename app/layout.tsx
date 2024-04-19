@@ -6,6 +6,9 @@ import { ThemeProvider } from "@/components/theme-provider";
 import ContextProvider from "@/components/contextsprovider";
 import SiteNav from "@/components/sitenav";
 import TitleBar from "@/components/titlebar";
+import { getServerSession } from "next-auth";
+import { lookupAddUser } from "./_actions/users";
+import { Suspense } from "react";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -17,11 +20,17 @@ export const metadata: Metadata = {
   description: "TaskForge: A Lima3 Media App",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const sessionData = await getServerSession();
+  const userData = await lookupAddUser(
+    sessionData?.user?.email!,
+    sessionData?.user?.name!
+  );
+
   return (
     <html lang="en">
       <body
@@ -30,7 +39,7 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <ContextProvider>
+        <ContextProvider userData={userData}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -38,8 +47,10 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <div className="flex flex-col h-full w-full">
-              <div className="w-full m-2 h-1/6">
-                <TitleBar />
+              <div className="w-full m-2 h-1/6 ">
+                <Suspense>
+                  <TitleBar sessionData={sessionData} userData={userData} />
+                </Suspense>
               </div>
               <div className="flex flex-row w-full h-5/6">
                 <div className="hidden md:block md:w-1/6">

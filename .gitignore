@@ -39,6 +39,3 @@ next-env.d.ts
 # database
 *.db
 *.db-journal
-
-# config file
-config.js

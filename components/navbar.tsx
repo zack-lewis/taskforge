@@ -14,15 +14,22 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { NavAvatar } from "./user-nav";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { Button } from "./ui/button";
+import { Session } from "next-auth";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { makeGravUrl } from "@/lib/gravitar";
 
-export function NavBar() {
+export function NavBar({ sessionData }: { sessionData: Session | null }) {
   const { setTheme } = useTheme();
   const [theme, setLTheme] = useState("system");
-  const { data: session } = useSession();
+
+  const gravLink = makeGravUrl(sessionData?.user?.email);
+  let imgLink = gravLink;
+
+  if (sessionData?.user?.image != null) {
+    imgLink = sessionData.user.image;
+  }
 
   useEffect(() => {
     setTheme(theme);
@@ -31,17 +38,25 @@ export function NavBar() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <NavAvatar />
+        <Button
+          variant="ghost"
+          className="relative h-36 rounded-3xl justify-center"
+        >
+          <Avatar className="h-9 w-9 md:h-full md:w-full">
+            <AvatarImage src={imgLink} alt={sessionData?.user?.name!} />
+            <AvatarFallback>{sessionData?.user?.name}</AvatarFallback>
+          </Avatar>
+        </Button>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">
-              {session?.user?.name}
+              {sessionData?.user?.name}
             </p>
             <p className="text-xs leading-none text-muted-foreground">
-              {session?.user?.email}
+              {sessionData?.user?.email}
             </p>
           </div>
         </DropdownMenuLabel>

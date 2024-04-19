@@ -287,7 +287,6 @@ function DeleteUser({ user }: { user: user }) {
 
 function SubmitButton() {
   const { pending } = useFormStatus();
-  console.log("Submitting Form");
 
   return (
     <Button type="submit" disabled={pending}>

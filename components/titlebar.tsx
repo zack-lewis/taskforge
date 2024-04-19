@@ -5,10 +5,23 @@ import { NavBar } from "./navbar";
 import { usePathname } from "next/navigation";
 import SiteNav from "./sitenav";
 import { useEffect, useState } from "react";
+import { Session } from "next-auth";
+import { useUserContext } from "./contextsprovider";
+import { user } from "@prisma/client";
 
-export default function TitleBar() {
+export default function TitleBar({
+  sessionData,
+  userData,
+}: {
+  sessionData: Session | null;
+  userData: user;
+}) {
   const [navOpen, setNavOpen] = useState(false);
   const navVisClass = navOpen ? "block" : "hidden";
+
+  // const { setUserContext } = useUserContext();
+
+  // setUserContext(userData.id);
 
   const path = usePathname();
 
@@ -45,7 +58,7 @@ export default function TitleBar() {
 
   return (
     <>
-      <div className="flex flex-row relative w-full">
+      <div className="flex flex-row relative w-full h-full">
         <div
           className="w-1/5 flex md:hidden justify-center align-middle"
           onClick={toggleSiteNav}
@@ -77,15 +90,16 @@ export default function TitleBar() {
             src="/taskforge.svg"
             alt="TaskForge Logo"
             width={300}
-            height={100}
+            height={150}
             className="align-middle mx-auto"
+            priority
           />
         </div>
         <div className="flex w-3/5 justify-center h-full text-xl md:text-4xl lg:text-7xl my-auto">
           {displayName}
         </div>
-        <div className="w-1/5">
-          <NavBar />
+        <div className="w-1/5 h-24 md:h-36 flex">
+          <NavBar sessionData={sessionData} />
         </div>
       </div>
       <div
